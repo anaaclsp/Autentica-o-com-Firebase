@@ -1,5 +1,5 @@
 # Autenticao-com-Firebase
-Desenvolvimento web com foco no estudo sobre o uso do Firebase para Autenticação.
+Desenvolvimento web com foco no estudo sobre o uso do Firebase para Autenticação e hospedagem do site.
 
 Desenvolvedora responsável: Ana Clara Santos de Paula
 
