@@ -1,14 +1,147 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=>, initial-scale=1.0">
-     <link href="../dist/output.css" rel="stylesheet">
-    <title>Autenticação com Firebase</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Autenticação</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .bg-auth {
+            background-image: url('https://source.unsplash.com/random/1920x1080/?login');
+            background-size: cover;
+            background-position: center;
+        }
+        .auth-card {
+            backdrop-filter: blur(8px);
+        }
+    </style>
 </head>
+<body class="min-h-screen bg-auth flex items-center justify-center p-4">
+    <!-- Tela de Login (padrão) -->
+    <div id="login-screen" class="w-full max-w-md">
+        <div class="bg-white/80 auth-card rounded-xl shadow-2xl p-8">
+            <h1 class="text-3xl font-bold text-center text-gray-800 mb-2">Bem-vindo de volta</h1>
+            <p class="text-gray-600 text-center mb-8">Faça login para continuar</p>
+            
+            <form class="space-y-5">
+                <div>
+                    <label class="block text-gray-700 mb-2">E-mail</label>
+                    <input type="email" placeholder="seu@email.com" 
+                           class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                </div>
+                
+                <div>
+                    <label class="block text-gray-700 mb-2">Senha</label>
+                    <input type="password" placeholder="••••••••" 
+                           class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                </div>
+                
+                <button type="button" onclick="showRegister()" 
+                        class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                    Não tem uma conta? Cadastre-se
+                </button>
+                
+                <button type="button" onclick="login()"
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition duration-200 mt-4">
+                    Entrar
+                </button>
+            </form>
+        </div>
+    </div>
 
-<body class="bg-gray-800">
-    
+    <!-- Tela de Cadastro (oculta inicialmente) -->
+    <div id="register-screen" class="w-full max-w-md hidden">
+        <div class="bg-white/80 auth-card rounded-xl shadow-2xl p-8">
+            <h1 class="text-3xl font-bold text-center text-gray-800 mb-2">Crie sua conta</h1>
+            <p class="text-gray-600 text-center mb-8">Leva menos de 1 minuto</p>
+            
+            <form class="space-y-5">
+                <div>
+                    <label class="block text-gray-700 mb-2">Nome completo</label>
+                    <input type="text" placeholder="Seu nome" 
+                           class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                </div>
+                
+                <div>
+                    <label class="block text-gray-700 mb-2">E-mail</label>
+                    <input type="email" placeholder="seu@email.com" 
+                           class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                </div>
+                
+                <div>
+                    <label class="block text-gray-700 mb-2">Senha</label>
+                    <input type="password" placeholder="••••••••" 
+                           class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                </div>
+                
+                <div>
+                    <label class="block text-gray-700 mb-2">Confirmar senha</label>
+                    <input type="password" placeholder="••••••••" 
+                           class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                </div>
+                
+                <button type="button" onclick="showLogin()" 
+                        class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                    Já tem uma conta? Faça login
+                </button>
+                
+                <button type="button" onclick="register()"
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition duration-200 mt-4">
+                    Cadastrar
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tela de Sucesso (oculta inicialmente) -->
+    <div id="success-screen" class="w-full max-w-md hidden">
+        <div class="bg-white/80 auth-card rounded-xl shadow-2xl p-8 text-center">
+            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+            </div>
+            
+            <h1 class="text-3xl font-bold text-gray-800 mb-4">Cadastro concluído!</h1>
+            <p class="text-gray-600 mb-8">Sua conta foi criada com sucesso. Agora você pode acessar todos os recursos.</p>
+            
+            <button onclick="showLogin()"
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition duration-200">
+                Ir para login
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Funções para alternar entre as telas
+        function showLogin() {
+            document.getElementById('login-screen').classList.remove('hidden');
+            document.getElementById('register-screen').classList.add('hidden');
+            document.getElementById('success-screen').classList.add('hidden');
+        }
+        
+        function showRegister() {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('register-screen').classList.remove('hidden');
+            document.getElementById('success-screen').classList.add('hidden');
+        }
+        
+        function showSuccess() {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('register-screen').classList.add('hidden');
+            document.getElementById('success-screen').classList.remove('hidden');
+        }
+        
+        // Funções simuladas de autenticação
+        function login() {
+            alert('Login simulado - implemente a lógica real aqui');
+            // Aqui você implementaria o login com Firebase
+        }
+        
+        function register() {
+            // Simula o cadastro (substitua pela implementação real)
+            setTimeout(showSuccess, 1000);
+        }
+    </script>
 </body>
-
 </html>
